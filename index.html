@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assaf Norman — Growth Engine Architect</title>
+<meta name="description" content="I build automated, signal-driven growth machines for scale-stage startups. Full-funnel acquisition engineered with n8n, LLMs, and server-side conversion pipelines.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B0E14; --ink-2:#11151F; --panel:#151A27; --wire:#2C3340; --wire-soft:#222936;
+  --bone:#E8E6DF; --bone-dim:#8B92A0;
+  --cyan:#3DD4D0; --amber:#F4A340; --green:#5BD68A; --violet:#9D8DF1;
+  --grid:rgba(44,51,64,.16);
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--bone); font-family:var(--body);
+  line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+::selection{background:var(--cyan);color:var(--ink)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+a{color:inherit}
+
+/* ---- top bar ---- */
+.bar{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);
+  background:rgba(11,14,20,.7);border-bottom:1px solid var(--wire-soft)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{font-family:var(--mono);font-size:.8rem;letter-spacing:.02em;color:var(--bone)}
+.brand b{color:var(--cyan)}
+.nav{display:flex;gap:28px;font-family:var(--mono);font-size:.72rem;letter-spacing:.05em}
+.nav a{color:var(--bone-dim);text-decoration:none;transition:color .2s}
+.nav a:hover{color:var(--cyan)}
+@media(max-width:720px){.nav{display:none}}
+
+/* ============ HERO — one loud thing: the thesis ============ */
+.hero{padding:170px 0 120px;position:relative}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(80% 60% at 15% 0%,rgba(61,212,208,.07),transparent 60%);}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);
+  display:flex;align-items:center;gap:10px;margin-bottom:30px}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--cyan)}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:p 2.4s infinite}
+@keyframes p{0%{box-shadow:0 0 0 0 rgba(91,214,138,.5)}70%{box-shadow:0 0 0 8px rgba(91,214,138,0)}100%{box-shadow:0 0 0 0 rgba(91,214,138,0)}}
+h1.title{font-family:var(--disp);font-weight:700;font-size:clamp(2.6rem,7vw,5.4rem);line-height:1.0;letter-spacing:-.025em;max-width:15ch}
+h1.title .gr{background:linear-gradient(100deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin-top:30px;max-width:52ch;font-size:1.12rem;color:var(--bone-dim)}
+.sub b{color:var(--bone);font-weight:600}
+.cta-row{margin-top:38px;display:flex;gap:13px;flex-wrap:wrap;align-items:center}
+.btn{font-family:var(--mono);font-size:.8rem;letter-spacing:.02em;text-decoration:none;padding:13px 22px;border-radius:8px;
+  display:inline-flex;align-items:center;gap:9px;transition:transform .15s,background .2s,border-color .2s,color .2s}
+.btn.primary{background:var(--cyan);color:var(--ink);font-weight:700}
+.btn.primary:hover{transform:translateY(-2px)}
+.btn.ghost{border:1px solid var(--wire);color:var(--bone)}
+.btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.who{margin-top:54px;font-family:var(--mono);font-size:.78rem;color:var(--bone-dim);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.who b{color:var(--bone);font-weight:500}
+.who .sep{color:var(--wire)}
+
+/* ============ section frame ============ */
+section{padding:96px 0;position:relative;border-top:1px solid var(--wire-soft)}
+.sec-head{margin-bottom:54px;max-width:64ch}
+.sec-num{font-family:var(--mono);font-size:.74rem;color:var(--cyan);letter-spacing:.12em}
+.sec-title{font-family:var(--disp);font-weight:700;font-size:clamp(1.9rem,4vw,2.9rem);letter-spacing:-.02em;margin-top:12px;line-height:1.08}
+.sec-sub{color:var(--bone-dim);margin-top:16px;font-size:1.05rem}
+
+/* ============ SIGNAL MODEL — the real differentiator, given the most weight ============ */
+.signal-lead{font-family:var(--disp);font-size:clamp(1.3rem,2.6vw,1.9rem);font-weight:500;line-height:1.4;max-width:24ch;color:var(--bone)}
+.signal-lead em{font-style:normal;color:var(--cyan)}
+.tiers{display:flex;flex-direction:column;gap:0;margin-top:48px;border:1px solid var(--wire);border-radius:14px;overflow:hidden}
+.tier{display:grid;grid-template-columns:160px 1fr;gap:0;padding:28px 30px;background:var(--panel);
+  border-bottom:1px solid var(--wire-soft);position:relative;transition:background .2s}
+.tier:last-child{border-bottom:none}
+.tier:hover{background:var(--ink-2)}
+.tier::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px}
+.tier[data-t="1"]::before{background:var(--green)}
+.tier[data-t="2"]::before{background:var(--amber)}
+.tier[data-t="3"]::before{background:var(--violet)}
+.tier .tleft{font-family:var(--mono)}
+.tier .tnum{font-size:.72rem;letter-spacing:.1em}
+.tier[data-t="1"] .tnum{color:var(--green)} .tier[data-t="2"] .tnum{color:var(--amber)} .tier[data-t="3"] .tnum{color:var(--violet)}
+.tier .trole{font-family:var(--disp);font-size:1.05rem;font-weight:600;margin-top:6px;color:var(--bone)}
+.tier .tright h4{font-family:var(--disp);font-size:1.15rem;font-weight:600;margin-bottom:6px}
+.tier .tright p{font-size:.95rem;color:var(--bone-dim)}
+.tier .verdict{font-family:var(--mono);font-size:.74rem;margin-top:10px;color:var(--bone-dim)}
+.tier .verdict b{color:var(--bone);font-weight:500}
+@media(max-width:680px){.tier{grid-template-columns:1fr;gap:14px;padding:24px 22px 24px 26px}}
+.principle{margin-top:36px;border-left:2px solid var(--cyan);padding:8px 0 8px 22px;font-family:var(--disp);font-size:1.3rem;color:var(--bone);max-width:36ch}
+.principle span{color:var(--cyan)}
+
+/* ============ THE ENGINE — qualitative schematic, no invented numbers ============ */
+.machine{border:1px solid var(--wire);border-radius:14px;background:linear-gradient(180deg,var(--ink-2),var(--ink));
+  padding:30px 30px 16px;position:relative;overflow:hidden}
+.machine .mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px}
+.machine .mhead h3{font-family:var(--mono);font-size:.76rem;letter-spacing:.06em;color:var(--bone-dim);font-weight:400}
+.machine .mhead .live{font-family:var(--mono);font-size:.7rem;color:var(--green);display:flex;align-items:center;gap:7px}
+.funnel-svg{width:100%;height:auto;display:block}
+.stage-label{font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+.stage-tag{font-family:var(--disp);font-weight:600;font-size:13px;fill:var(--bone)}
+.tierline{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em}
+.caption{font-family:var(--mono);font-size:.72rem;color:var(--bone-dim);padding:16px 2px 6px;border-top:1px solid var(--wire-soft);margin-top:10px}
+
+/* ============ PROOF — real metrics only, the loud thing of its screen ============ */
+.proof{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:1px solid var(--wire);border-radius:14px;overflow:hidden}
+@media(max-width:680px){.proof{grid-template-columns:1fr}}
+.metric{padding:38px 34px;border-right:1px solid var(--wire-soft);border-bottom:1px solid var(--wire-soft);background:var(--panel)}
+.metric:nth-child(2n){border-right:none}
+.metric:nth-child(n+3){border-bottom:none}
+@media(max-width:680px){.metric{border-right:none}.metric:last-child{border-bottom:none}}
+.metric .big{font-family:var(--disp);font-weight:700;font-size:clamp(2.4rem,5vw,3.4rem);line-height:1;letter-spacing:-.03em}
+.metric .lbl{font-size:.98rem;color:var(--bone);margin-top:14px;font-weight:500}
+.metric .ctx{font-family:var(--mono);font-size:.72rem;color:var(--bone-dim);margin-top:8px;letter-spacing:.02em}
+.metric[data-k="1"] .big{color:var(--green)} .metric[data-k="2"] .big{color:var(--cyan)}
+.metric[data-k="3"] .big{color:var(--amber)} .metric[data-k="4"] .big{color:var(--violet)}
+
+/* ============ WHAT I BUILD ============ */
+.caps{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:680px){.caps{grid-template-columns:1fr}}
+.cap{border:1px solid var(--wire-soft);border-radius:12px;padding:24px;background:var(--panel);transition:border-color .2s,transform .2s}
+.cap:hover{border-color:var(--cyan);transform:translateY(-3px)}
+.cap .ic{font-family:var(--mono);font-size:.7rem;color:var(--cyan);letter-spacing:.06em}
+.cap h4{font-family:var(--disp);font-size:1.18rem;margin:11px 0 9px;font-weight:600}
+.cap p{font-size:.93rem;color:var(--bone-dim)}
+.cap code{font-family:var(--mono);font-size:.78rem;color:var(--amber);background:var(--ink);padding:1px 6px;border-radius:4px}
+
+/* ============ STACK ============ */
+.stackgrid{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:start}
+@media(max-width:780px){.stackgrid{grid-template-columns:1fr}}
+.codeblock{border:1px solid var(--wire);border-radius:12px;background:#080B11;overflow:hidden;font-family:var(--mono)}
+.codeblock .ctop{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--wire-soft);font-size:.72rem;color:var(--bone-dim)}
+.dot{width:10px;height:10px;border-radius:50%}
+.codeblock pre{padding:20px 18px;font-size:.78rem;line-height:1.75;overflow-x:auto;color:var(--bone)}
+.codeblock .k{color:var(--violet)} .codeblock .s{color:var(--green)} .codeblock .c{color:var(--wire)} .codeblock .f{color:var(--cyan)} .codeblock .n{color:var(--amber)}
+.stacklist{display:flex;flex-direction:column;gap:12px}
+.stackrow{border:1px solid var(--wire-soft);border-radius:10px;padding:16px 18px;background:var(--panel)}
+.stackrow .sr-h{font-family:var(--mono);font-size:.7rem;color:var(--cyan);letter-spacing:.05em}
+.stackrow .sr-t{margin-top:10px;display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:var(--mono);font-size:.74rem;padding:4px 10px;border:1px solid var(--wire);border-radius:6px;color:var(--bone-dim);transition:.2s}
+.chip:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ============ TIMELINE ============ */
+.tl{position:relative;padding-left:30px;max-width:74ch}
+.tl::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--wire-soft)}
+.tlitem{position:relative;padding:0 0 34px}
+.tlitem:last-child{padding-bottom:0}
+.tlitem::before{content:"";position:absolute;left:-30px;top:5px;width:13px;height:13px;border-radius:50%;background:var(--ink);border:2px solid var(--cyan)}
+.tlitem .yr{font-family:var(--mono);font-size:.74rem;color:var(--cyan);letter-spacing:.04em}
+.tlitem h4{font-family:var(--disp);font-size:1.18rem;margin:5px 0 4px;font-weight:600}
+.tlitem .role{font-size:.86rem;color:var(--bone-dim);font-weight:500}
+.tlitem p{font-size:.92rem;color:var(--bone-dim);margin-top:9px}
+
+/* ============ CTA ============ */
+.band{border:1px solid var(--wire);border-radius:16px;padding:54px 40px;background:
+  radial-gradient(120% 140% at 0% 0%,rgba(61,212,208,.1),transparent 52%),
+  radial-gradient(120% 140% at 100% 100%,rgba(157,141,241,.1),transparent 52%),var(--ink-2);
+  text-align:center}
+.band h3{font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,3.6vw,2.5rem);letter-spacing:-.02em}
+.band p{color:var(--bone-dim);margin-top:14px;max-width:48ch;margin-left:auto;margin-right:auto}
+.band .cta-row{justify-content:center;margin-top:30px}
+
+footer{padding:42px 0 64px;border-top:1px solid var(--wire-soft);margin-top:0}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+  font-family:var(--mono);font-size:.74rem;color:var(--bone-dim)}
+footer a{color:var(--cyan);text-decoration:none}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="wrap">
+  <div class="brand"><b>AN</b> / growth-engine.architect</div>
+  <nav class="nav">
+    <a href="#signal">Signal Model</a>
+    <a href="#engine">Engine</a>
+    <a href="#proof">Track Record</a>
+    <a href="#build">What I Build</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</div></div>
+
+<!-- ============ HERO ============ -->
+<header class="hero"><div class="wrap">
+  <div class="eyebrow"><span class="pulse"></span>Growth Marketing × Automation Engineering</div>
+  <h1 class="title">I build the <span class="gr">growth machine</span> that scales your funnel without scaling headcount.</h1>
+  <p class="sub">Full-funnel acquisition for B2B/B2SMB scale-stage startups — <b>engineered, not guessed</b>. I wire signal-driven optimization, server-side conversion pipelines, and agentic LLM workflows into one system that compounds.</p>
+  <div class="cta-row">
+    <a class="btn primary" href="#contact">Let's build →</a>
+    <a class="btn ghost" href="#signal">How I operate</a>
+  </div>
+  <div class="who">
+    <span><b>Now:</b> UA Team Lead @ Guesty</span><span class="sep">/</span>
+    <span>Global stack · US / UK / EU</span><span class="sep">/</span>
+    <span>Tel Aviv</span>
+  </div>
+</div></header>
+
+<!-- ============ 01 · SIGNAL MODEL (the differentiator — most weight) ============ -->
+<section id="signal"><div class="wrap">
+  <div class="sec-head reveal">
+    <div class="sec-num">01 / HOW I OPERATE</div>
+    <h2 class="sec-title">I optimize on signal, not on dashboards.</h2>
+    <p class="sec-sub">Most teams over-trust platform optimization and declare a channel a "winner" off attribution it can't prove. I run a three-tier signal model that decides what earns budget — and what only earns a watch.</p>
+  </div>
+
+  <p class="signal-lead reveal">The hierarchy is the whole point: <em>what you trust determines what you scale.</em></p>
+
+  <div class="tiers reveal">
+    <div class="tier" data-t="1">
+      <div class="tleft"><div class="tnum">TIER 1</div><div class="trole">Decide</div></div>
+      <div class="tright">
+        <h4>SQL &amp; MQL — volume + value</h4>
+        <p>The only signals strong enough to allocate budget against. Optimization targets, bid feeds and scaling calls anchor here.</p>
+        <div class="verdict">→ <b>Drives budget &amp; scaling decisions.</b></div>
+      </div>
+    </div>
+    <div class="tier" data-t="2">
+      <div class="tleft"><div class="tnum">TIER 2</div><div class="trole">Diagnose</div></div>
+      <div class="tright">
+        <h4>Platform conversions · CTR / CPC / CVR</h4>
+        <p>Useful for diagnosing what's moving and where to test — never the basis for a winner call on its own.</p>
+        <div class="verdict">→ <b>Informs tests, not budget.</b></div>
+      </div>
+    </div>
+    <div class="tier" data-t="3">
+      <div class="tleft"><div class="tnum">TIER 3</div><div class="trole">Context</div></div>
+      <div class="tright">
+        <h4>Attribution</h4>
+        <p>Weak and non-deterministic — correlation, not causation. Read it for direction; validate real lift with incrementality tests.</p>
+        <div class="verdict">→ <b>Read for direction only.</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="principle reveal">"Trust the signal enough to <span>optimize</span> — not enough to blindly <span>scale</span>."</div>
+</div></section>
+
+<!-- ============ 02 · THE ENGINE (qualitative schematic) ============ -->
+<section id="engine"><div class="wrap">
+  <div class="sec-head reveal">
+    <div class="sec-num">02 / THE SYSTEM</div>
+    <h2 class="sec-title">One closed loop, learning from revenue.</h2>
+    <p class="sec-sub">Paid spend feeds the funnel; the funnel's real outcomes feed back into bidding through server-side signals. The machine learns from closed-won SQLs, not from clicks.</p>
+  </div>
+
+  <div class="machine reveal">
+    <div class="mhead">
+      <h3>// full-funnel acquisition engine</h3>
+      <span class="live"><span class="pulse"></span>optimizing on Tier-1 signals</span>
+    </div>
+    <svg class="funnel-svg" viewBox="0 0 980 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Closed-loop funnel: paid channels feed MQL then SQL then pipeline, with server-side feedback returning to bidding">
+      <defs>
+        <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#3DD4D0"/><stop offset="1" stop-color="#5BD68A"/>
+        </linearGradient>
+        <linearGradient id="sf" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#151A27"/><stop offset="1" stop-color="#0B0E14"/>
+        </linearGradient>
+      </defs>
+      <path d="M70 130 H910" stroke="#222936" stroke-width="2"/>
+      <path d="M70 130 H910" stroke="url(#flow)" stroke-width="2.5" stroke-dasharray="16 850" stroke-linecap="round">
+        <animate attributeName="stroke-dashoffset" from="866" to="0" dur="3.4s" repeatCount="indefinite"/>
+      </path>
+
+      <g><rect x="18" y="92" width="124" height="76" rx="11" fill="url(#sf)" stroke="#2C3340"/>
+        <text x="80" y="84" text-anchor="middle" class="stage-label" fill="#8B92A0">INPUT</text>
+        <text x="80" y="126" text-anchor="middle" class="stage-tag">Paid Channels</text>
+        <text x="80" y="148" text-anchor="middle" class="tierline" fill="#8B92A0">Search · Social · Video</text>
+      </g>
+      <g><rect x="270" y="92" width="124" height="76" rx="11" fill="url(#sf)" stroke="#F4A340"/>
+        <text x="332" y="84" text-anchor="middle" class="stage-label" fill="#F4A340">TIER 2 — DIAGNOSE</text>
+        <text x="332" y="126" text-anchor="middle" class="stage-tag">MQL</text>
+        <text x="332" y="148" text-anchor="middle" class="tierline" fill="#8B92A0">volume + value</text>
+      </g>
+      <g><rect x="522" y="92" width="124" height="76" rx="11" fill="url(#sf)" stroke="#5BD68A"/>
+        <text x="584" y="84" text-anchor="middle" class="stage-label" fill="#5BD68A">TIER 1 — DECIDE ★</text>
+        <text x="584" y="126" text-anchor="middle" class="stage-tag">SQL</text>
+        <text x="584" y="148" text-anchor="middle" class="tierline" fill="#8B92A0">the signal we trust</text>
+      </g>
+      <g><rect x="774" y="92" width="124" height="76" rx="11" fill="url(#sf)" stroke="#3DD4D0"/>
+        <text x="836" y="84" text-anchor="middle" class="stage-label" fill="#3DD4D0">OUTCOME</text>
+        <text x="836" y="126" text-anchor="middle" class="stage-tag">Pipeline</text>
+        <text x="836" y="148" text-anchor="middle" class="tierline" fill="#8B92A0">closed-won</text>
+      </g>
+
+      <path d="M836 176 Q836 236 453 236 Q70 236 70 176" fill="none" stroke="#9D8DF1" stroke-width="1.6" stroke-dasharray="5 5"/>
+      <text x="453" y="262" text-anchor="middle" class="tierline" fill="#9D8DF1">↩ server-side feedback (CAPI · offline conversions) — bidding learns from revenue, not clicks</text>
+    </svg>
+    <div class="caption">Schematic of the operating model · n8n · CAPI · offline_conversion_upload · LLM enrichment · BigQuery</div>
+  </div>
+</div></section>
+
+<!-- ============ 03 · TRACK RECORD (real numbers only) ============ -->
+<section id="proof"><div class="wrap">
+  <div class="sec-head reveal">
+    <div class="sec-num">03 / TRACK RECORD</div>
+    <h2 class="sec-title">Outcomes, across startup and enterprise.</h2>
+    <p class="sec-sub">Figures from roles at Guesty, DoorLoop and K-Logic Group — not projections.</p>
+  </div>
+  <div class="proof reveal">
+    <div class="metric" data-k="1"><div class="big">350%</div><div class="lbl">YoY growth in qualified-lead acquisition &amp; deal size</div><div class="ctx">shifting SMB → mid-market/enterprise · DoorLoop</div></div>
+    <div class="metric" data-k="2"><div class="big">+24%</div><div class="lbl">client performance over industry benchmark</div><div class="ctx">in a declining market · K-Logic UA</div></div>
+    <div class="metric" data-k="3"><div class="big">$60M</div><div class="lbl">annual media budget directed, with P&amp;L ownership</div><div class="ctx">Director of Marketing Analytics · K-Logic</div></div>
+    <div class="metric" data-k="4"><div class="big">+15%</div><div class="lbl">PPC department capacity from an internal MVP I shipped</div><div class="ctx">process automation · K-Logic</div></div>
+  </div>
+</div></section>
+
+<!-- ============ 04 · WHAT I BUILD ============ -->
+<section id="build"><div class="wrap">
+  <div class="sec-head reveal">
+    <div class="sec-num">04 / CAPABILITIES</div>
+    <h2 class="sec-title">What I actually build for a scale-stage stack.</h2>
+    <p class="sec-sub">Deployable systems — agentic workflows and rigid API contracts, not slideware.</p>
+  </div>
+  <div class="caps">
+    <div class="cap reveal"><div class="ic">SERVER-SIDE</div><h4>CAPI conversion loops</h4><p>LinkedIn &amp; Meta server-side feedback via <code>n8n</code> — optimize toward high-intent SQLs instead of low-intent MQL form fills, with EMQ tuned on <code>External_ID</code> + <code>Client_User_Agent</code>.</p></div>
+    <div class="cap reveal"><div class="ic">AGENTIC</div><h4>Lead suppression engine</h4><p>An LLM sequence reads form descriptions, classifies bad-fit leads, and fires exclusion signals into Meta / LinkedIn Audience APIs — stops wasted spend at the source.</p></div>
+    <div class="cap reveal"><div class="ic">BIDDING</div><h4>Value-based bid feeds</h4><p>Max-lead-score and modeled <code>pLTV</code> bidding. Push <code>offline_conversion_upload_service</code> with exact gclid + conversion value so platforms learn from revenue, not vanity events.</p></div>
+    <div class="cap reveal"><div class="ic">PIPELINES</div><h4>Clean attribution infra</h4><p>HubSpot / Salesforce → BigQuery pipelines, with Mixpanel and offline conversions wired so Tier-1 signals stay trustworthy end to end.</p></div>
+    <div class="cap reveal"><div class="ic">CREATIVE</div><h4>Creative feedback loops</h4><p>Meta ad-level normalization → scoring → review, tying creative back to funnel outcomes, plus LLM-driven ad localization across regional markets.</p></div>
+    <div class="cap reveal"><div class="ic">SCALE</div><h4>Geo expansion without headcount</h4><p>Automated, localized growth engines opening new markets on the same team — the operating model I run today at Guesty.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ 05 · STACK ============ -->
+<section><div class="wrap">
+  <div class="sec-head reveal">
+    <div class="sec-num">05 / THE STACK</div>
+    <h2 class="sec-title">APIs are contracts. I treat them like one.</h2>
+  </div>
+  <div class="stackgrid">
+    <div class="codeblock reveal">
+      <div class="ctop"><span class="dot" style="background:#F4A340"></span><span class="dot" style="background:#5BD68A"></span><span class="dot" style="background:#3DD4D0"></span>&nbsp;n8n · sql_to_capi.node</div>
+<pre><span class="c">// high-intent SQL → server-side conversion</span>
+<span class="k">const</span> sql = $json.body.lead;
+<span class="k">const</span> payload = {
+  <span class="f">event_name</span>: <span class="s">"sql_qualified"</span>,
+  <span class="f">event_time</span>: Math.floor(Date.now()/<span class="n">1000</span>),
+  <span class="f">user_data</span>: {
+    <span class="f">em</span>: sql.email.<span class="f">hash</span>(),          <span class="c">// sha256</span>
+    <span class="f">external_id</span>: sql.crm_id.<span class="f">hash</span>(),
+    <span class="f">client_user_agent</span>: sql.ua      <span class="c">// EMQ boost</span>
+  },
+  <span class="f">custom_data</span>: { <span class="f">value</span>: sql.pltv, <span class="f">currency</span>: <span class="s">"USD"</span> }
+};
+<span class="k">return</span> postTo(<span class="s">"meta.capi"</span>, payload);</pre>
+    </div>
+    <div class="stacklist">
+      <div class="stackrow reveal"><div class="sr-h">AUTOMATION &amp; AGENTIC</div><div class="sr-t"><span class="chip">n8n</span><span class="chip">Make</span><span class="chip">LLMs / Claude</span><span class="chip">App Scripts</span></div></div>
+      <div class="stackrow reveal"><div class="sr-h">PAID MEDIA</div><div class="sr-t"><span class="chip">Google Ads</span><span class="chip">Meta</span><span class="chip">LinkedIn</span><span class="chip">DV360</span><span class="chip">YouTube/CTV</span><span class="chip">TikTok</span></div></div>
+      <div class="stackrow reveal"><div class="sr-h">DATA &amp; ANALYTICS</div><div class="sr-t"><span class="chip">BigQuery</span><span class="chip">Mixpanel</span><span class="chip">Looker</span><span class="chip">GA4</span><span class="chip">PostHog</span></div></div>
+      <div class="stackrow reveal"><div class="sr-h">CRM &amp; OPS</div><div class="sr-t"><span class="chip">HubSpot</span><span class="chip">Salesforce</span><span class="chip">monday</span></div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 06 · TRAJECTORY ============ -->
+<section><div class="wrap">
+  <div class="sec-head reveal">
+    <div class="sec-num">06 / TRAJECTORY</div>
+    <h2 class="sec-title">From $2M budgets to global growth architecture.</h2>
+  </div>
+  <div class="tl">
+    <div class="tlitem reveal"><div class="yr">NOW · GUESTY</div><h4>UA Team Lead</h4><div class="role">Global growth stack · US / UK / EU</div><p>Aggressive geo expansion without added headcount. Own strategy, budget and performance across Search, Social and Video; build automated growth engines with n8n + LLMs; lead the HubSpot → BigQuery attribution infrastructure.</p></div>
+    <div class="tlitem reveal"><div class="yr">2024 — 2025 · DOORLOOP</div><h4>Paid Social Lead</h4><div class="role">B2B / B2SMB property-management SaaS</div><p>Scaled non-search acquisition across Meta, LinkedIn, TikTok, Taboola and YouTube. Shifted focus SMB → mid-market/enterprise, driving 350% YoY growth in qualified-lead acquisition and deal size. Built lead-score and pLTV bidding into the data infra.</p></div>
+    <div class="tlitem reveal"><div class="yr">2023 — 2024 · K-LOGIC</div><h4>Director of Marketing Analytics</h4><div class="role">$60M annual media budget</div><p>Led Data Engineering, BI, UA and SEO with full P&amp;L. Shipped an internal MVP that lifted PPC department capacity 15%; presented strategic insight that moved CAC and ROI for stakeholders.</p></div>
+    <div class="tlitem reveal"><div class="yr">2020 — 2022 · K-LOGIC</div><h4>UA Team Lead · DV360 Expert</h4><div class="role">$18M annual budget</div><p>24% performance improvement over benchmark across search, display, video, social and inbound. Led programmatic and full-funnel strategy for a five-person multi-channel team.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact"><div class="wrap">
+  <div class="band reveal">
+    <h3>Ready to engineer your growth machine?</h3>
+    <p>If you're scaling a B2B/B2SMB startup and your funnel runs on manual work and attribution guesses — let's wire something that compounds.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="mailto:Assaf.Norman@gmail.com">Assaf.Norman@gmail.com</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/assafnorman" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div>© <span id="yr"></span> Assaf Norman · Growth Engine Architect</div>
+  <div><a href="mailto:Assaf.Norman@gmail.com">Assaf.Norman@gmail.com</a> · 054-7628832</div>
+</div></footer>
+
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
